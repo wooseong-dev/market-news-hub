@@ -1,42 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <article class="article panel">
-  <div class="meta">
-    <span>{{ item.category }}</span>
-    <span>{{ item.importance }}</span>
-    <span>{{ item.certainty }}</span>
-    <span>{{ item.assets }}</span>
-  </div>
+  <div class="meta"><span>{{ cat_label(item.category, lang) }}</span><span>{{ item.importance }}</span><span>{{ item.certainty }}</span><span>{{ item.assets }}</span></div>
   <h1>{{ item.title }}</h1>
   <p class="published">{{ item.source }} · {{ item.published_at }}</p>
-
-  <h2>시장 해석</h2>
-  <p>{{ item.interpretation }}</p>
-
-  {% if item.summary %}
-  <h2>요약</h2>
-  <p>{{ item.summary }}</p>
-  {% endif %}
-
-  <div class="notice">
-    <strong>투자 판단 주의</strong>
-    <p>이 페이지는 원문 뉴스와 키워드 기반 시장 해석을 함께 보여주는 정보 페이지입니다. 매수·매도 추천이 아닙니다.</p>
-  </div>
-
-  <p><a class="button" href="{{ item.url }}" target="_blank" rel="nofollow noopener">원문 기사 보기</a></p>
+  <h2>{{ text.market_interpretation }}</h2>
+  <p>{{ interp_item(item, lang) }}</p>
+  {% if item.summary %}<h2>{{ text.summary }}</h2><p>{{ item.summary }}</p>{% endif %}
+  <div class="notice"><strong>{{ text.investment_notice }}</strong><p>{{ text.investment_notice_body }}</p></div>
+  <p><a class="button" href="{{ item.url }}" target="_blank" rel="nofollow noopener">{{ text.source_full }}</a></p>
 </article>
-
 {% if related %}
 <section class="panel">
-  <h2>관련 뉴스</h2>
+  <h2>{{ text.related }}</h2>
   <div class="news-list">
     {% for r in related %}
-    <article class="news-row compact">
-      <div>
-        <div class="meta"><span>{{ r.category }}</span><span>{{ r.importance }}</span></div>
-        <h3><a href="/article/{{ r.slug }}">{{ r.title }}</a></h3>
-      </div>
-    </article>
+    <article class="news-row compact"><div><div class="meta"><span>{{ cat_label(r.category, lang) }}</span><span>{{ r.importance }}</span></div><h3><a href="{{ localize('/article/' ~ r.slug, lang) }}">{{ r.title }}</a></h3></div></article>
     {% endfor %}
   </div>
 </section>

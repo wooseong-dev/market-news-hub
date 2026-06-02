@@ -132,3 +132,26 @@ input, select {
   .hero h1 { font-size: 32px; }
   .nav { align-items: flex-start; flex-direction: column; padding: 14px 20px; }
 }
+
+/* Multilingual update */
+.language-switch {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.language-switch a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: var(--muted);
+}
+.language-switch a.active {
+  color: var(--text);
+  background: rgba(255,255,255,.08);
+}
+@media (max-width: 900px) {
+  .language-switch { padding-bottom: 12px; }
+}

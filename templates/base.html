@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="{{ lang }}">
 <head>
   <meta charset="utf-8">
   <title>{{ page_title }} | {{ settings.site_name }}</title>
@@ -7,6 +7,9 @@
   <meta name="description" content="{{ page_description }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="canonical" href="{{ settings.site_url }}{{ request.url.path }}">
+  <link rel="alternate" hreflang="ko" href="{{ settings.site_url }}{{ ko_path }}">
+  <link rel="alternate" hreflang="en" href="{{ settings.site_url }}{{ en_path }}">
+  <link rel="alternate" hreflang="x-default" href="{{ settings.site_url }}{{ ko_path }}">
   <link rel="stylesheet" href="/static/styles.css">
   {% if settings.ga_measurement_id %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.ga_measurement_id }}"></script>
@@ -24,15 +27,21 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="/">{{ settings.site_name }}</a>
+      <a class="brand" href="{{ localize('/', lang) }}">{{ settings.site_name }}</a>
       <nav>
-        <a href="/news">News</a>
-        <a href="/news/rates">Rates</a>
-        <a href="/news/oil">Oil</a>
-        <a href="/news/crypto">Crypto</a>
-        <a href="/news/ai-semis">AI/Semis</a>
-        <a href="/about">About</a>
+        <a href="{{ localize('/news', lang) }}">{{ text.news }}</a>
+        <a href="{{ localize('/news/rates', lang) }}">{{ text.rates }}</a>
+        <a href="{{ localize('/news/oil', lang) }}">{{ text.oil }}</a>
+        <a href="{{ localize('/news/crypto', lang) }}">{{ text.crypto }}</a>
+        <a href="{{ localize('/news/ai-semis', lang) }}">{{ text.ai }}</a>
+        <a href="{{ localize('/guides', lang) }}">{{ text.guides }}</a>
+        <a href="{{ localize('/about', lang) }}">{{ text.about }}</a>
       </nav>
+      <div class="language-switch">
+        <span>{{ text.language }}</span>
+        <a class="{% if lang == 'ko' %}active{% endif %}" href="{{ ko_path }}">한국어</a>
+        <a class="{% if lang == 'en' %}active{% endif %}" href="{{ en_path }}">English</a>
+      </div>
     </div>
   </header>
 
@@ -43,43 +52,33 @@
     <aside class="sidebar">
       <div class="adbox">
         {% if settings.adsense_client_id %}
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="{{ settings.adsense_client_id }}"
-             data-ad-slot="0000000000"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="{{ settings.adsense_client_id }}" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         {% else %}
-        <strong>Ad Slot</strong>
-        <p>애드센스 승인 후 광고 코드가 들어갈 자리.</p>
+        <strong>{{ text.ad_slot }}</strong>
+        <p>{{ text.ad_desc }}</p>
         {% endif %}
       </div>
 
       <div class="box">
-        <h3>Categories</h3>
-        <a href="/news/us-market">US Market</a>
-        <a href="/news/rates">Rates</a>
-        <a href="/news/oil">Oil</a>
-        <a href="/news/dollar">Dollar</a>
-        <a href="/news/ai-semis">AI/Semis</a>
-        <a href="/news/quantum">Quantum</a>
-        <a href="/news/crypto">Crypto</a>
-        <a href="/news/korea">Korea</a>
+        <h3>{{ text.categories }}</h3>
+        {% for category in categories %}
+        <a href="{{ localize('/news/' ~ category, lang) }}">{{ cat_label(category, lang) }}</a>
+        {% endfor %}
       </div>
 
       <div class="box small">
-        <h3>주의</h3>
-        <p>이 사이트는 투자 조언이 아니라 시장 뉴스와 변동성 요인을 정리하는 정보 도구입니다.</p>
+        <h3>{{ text.note }}</h3>
+        <p>{{ text.note_body }}</p>
       </div>
     </aside>
   </main>
 
   <footer class="site-footer">
     <div class="container">
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/contact">Contact</a>
+      <a href="{{ localize('/privacy', lang) }}">Privacy</a>
+      <a href="{{ localize('/terms', lang) }}">Terms</a>
+      <a href="{{ localize('/contact', lang) }}">Contact</a>
       <span>© {{ settings.site_name }}</span>
     </div>
   </footer>

@@ -2,23 +2,19 @@
 {% block content %}
 <section class="hero">
   <p class="eyebrow">Market Volatility Radar</p>
-  <h1>오늘 시장을 흔드는 뉴스만 빠르게 보기</h1>
-  <p>금리, 유가, 달러, AI·반도체, 양자컴퓨팅, 크립토 정책, 한국장 영향 뉴스를 모아 변동성 관점으로 분류합니다.</p>
+  <h1>{{ text.hero_title }}</h1>
+  <p>{{ text.hero_desc }}</p>
 </section>
 
 {% if high_items %}
 <section class="panel">
-  <h2>High Impact Watch</h2>
+  <h2>{{ text.high }}</h2>
   <div class="cards">
     {% for item in high_items %}
     <article class="card high">
-      <div class="meta">
-        <span>{{ item.category }}</span>
-        <span>{{ item.importance }}</span>
-        <span>{{ item.certainty }}</span>
-      </div>
-      <h3><a href="/article/{{ item.slug }}">{{ item.title }}</a></h3>
-      <p>{{ item.interpretation }}</p>
+      <div class="meta"><span>{{ cat_label(item.category, lang) }}</span><span>{{ item.importance }}</span><span>{{ item.certainty }}</span></div>
+      <h3><a href="{{ localize('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h3>
+      <p>{{ interp_item(item, lang) }}</p>
     </article>
     {% endfor %}
   </div>
@@ -27,22 +23,18 @@
 
 <section class="panel">
   <div class="section-head">
-    <h2>Latest News</h2>
-    <a href="/news">전체 보기 →</a>
+    <h2>{{ text.latest }}</h2>
+    <a href="{{ localize('/news', lang) }}">{{ text.view_all }}</a>
   </div>
   <div class="news-list">
     {% for item in items %}
     <article class="news-row">
       <div>
-        <div class="meta">
-          <span>{{ item.category }}</span>
-          <span>{{ item.importance }}</span>
-          <span>{{ item.assets }}</span>
-        </div>
-        <h3><a href="/article/{{ item.slug }}">{{ item.title }}</a></h3>
-        <p>{{ item.interpretation }}</p>
+        <div class="meta"><span>{{ cat_label(item.category, lang) }}</span><span>{{ item.importance }}</span><span>{{ item.assets }}</span></div>
+        <h3><a href="{{ localize('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h3>
+        <p>{{ interp_item(item, lang) }}</p>
       </div>
-      <a class="source" href="{{ item.url }}" target="_blank" rel="nofollow noopener">원문</a>
+      <a class="source" href="{{ item.url }}" target="_blank" rel="nofollow noopener">{{ text.source }}</a>
     </article>
     {% endfor %}
   </div>
