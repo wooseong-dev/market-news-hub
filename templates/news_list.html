@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>뉴스 전체</h1>
+
+  <form class="filters" method="get" action="/news">
+    <input type="search" name="q" value="{{ q }}" placeholder="검색어: oil, BTC, CPI, Nvidia...">
+    <select name="category">
+      <option value="">All categories</option>
+      {% for category in categories %}
+      <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+      {% endfor %}
+    </select>
+    <select name="importance">
+      <option value="">All importance</option>
+      <option value="High" {% if selected_importance == "High" %}selected{% endif %}>High</option>
+      <option value="Medium" {% if selected_importance == "Medium" %}selected{% endif %}>Medium</option>
+      <option value="Low" {% if selected_importance == "Low" %}selected{% endif %}>Low</option>
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+
+  <div class="news-list">
+    {% for item in items %}
+    <article class="news-row">
+      <div>
+        <div class="meta">
+          <span>{{ item.category }}</span>
+          <span>{{ item.importance }}</span>
+          <span>{{ item.certainty }}</span>
+          <span>{{ item.assets }}</span>
+        </div>
+        <h2><a href="/article/{{ item.slug }}">{{ item.title }}</a></h2>
+        <p>{{ item.interpretation }}</p>
+        <small>{{ item.source }} · {{ item.published_at }}</small>
+      </div>
+      <a class="source" href="{{ item.url }}" target="_blank" rel="nofollow noopener">원문</a>
+    </article>
+    {% else %}
+    <p>뉴스가 없습니다.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
