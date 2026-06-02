@@ -1,20 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="hero">
-  <p class="eyebrow">Market Volatility Radar</p>
-  <h1>{{ text.hero_title }}</h1>
-  <p>{{ text.hero_desc }}</p>
+  <p class="eyebrow">{{ t.hero_eyebrow }}</p>
+  <h1>{{ t.hero_title }}</h1>
+  <p>{{ t.hero_desc }}</p>
 </section>
 
 {% if high_items %}
 <section class="panel">
-  <h2>{{ text.high }}</h2>
+  <h2>{{ t.high_impact }}</h2>
   <div class="cards">
     {% for item in high_items %}
-    <article class="card high">
-      <div class="meta"><span>{{ cat_label(item.category, lang) }}</span><span>{{ item.importance }}</span><span>{{ item.certainty }}</span></div>
-      <h3><a href="{{ localize('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h3>
-      <p>{{ interp_item(item, lang) }}</p>
+    <article class="card high upgraded-card">
+      <div class="news-thumb {{ item.category }}">
+        <span class="thumb-icon">{{ category_icon(item.category) }}</span>
+        <span class="thumb-label">{{ category_name(item.category, lang) }}</span>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge category">{{ category_label(item.category, lang) }}</span>
+        <span class="badge impact {{ item.importance|lower }}">{{ importance_label(item.importance, lang) }}</span>
+        <span class="badge certainty">{{ item.certainty }}</span>
+      </div>
+
+      <h3><a href="{{ localized_path('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h3>
+      <p>{{ interpret_item(item, lang) }}</p>
+
+      <div class="asset-row">
+        {% for asset in split_tags(item.assets) %}
+        <span class="asset-chip">{{ asset }}</span>
+        {% endfor %}
+      </div>
     </article>
     {% endfor %}
   </div>
@@ -23,18 +39,38 @@
 
 <section class="panel">
   <div class="section-head">
-    <h2>{{ text.latest }}</h2>
-    <a href="{{ localize('/news', lang) }}">{{ text.view_all }}</a>
+    <h2>{{ t.latest_news }}</h2>
+    <a href="{{ localized_path('/news', lang) }}">{{ t.view_all }}</a>
   </div>
-  <div class="news-list">
+
+  <div class="news-list upgraded-news-list">
     {% for item in items %}
-    <article class="news-row">
-      <div>
-        <div class="meta"><span>{{ cat_label(item.category, lang) }}</span><span>{{ item.importance }}</span><span>{{ item.assets }}</span></div>
-        <h3><a href="{{ localize('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h3>
-        <p>{{ interp_item(item, lang) }}</p>
+    <article class="news-row upgraded-row">
+      <a class="news-thumb small {{ item.category }}" href="{{ localized_path('/article/' ~ item.slug, lang) }}">
+        <span class="thumb-icon">{{ category_icon(item.category) }}</span>
+        <span class="thumb-label">{{ category_name(item.category, lang) }}</span>
+      </a>
+
+      <div class="news-main">
+        <div class="badge-row">
+          <span class="badge category">{{ category_label(item.category, lang) }}</span>
+          <span class="badge impact {{ item.importance|lower }}">{{ importance_label(item.importance, lang) }}</span>
+          {% for asset in split_tags(item.assets) %}
+          <span class="badge asset">{{ asset }}</span>
+          {% endfor %}
+        </div>
+
+        <h3><a href="{{ localized_path('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h3>
+        <p>{{ interpret_item(item, lang) }}</p>
+
+        <div class="source-line">
+          <span>{{ item.source }}</span>
+          <span>·</span>
+          <span>{{ item.published_at }}</span>
+        </div>
       </div>
-      <a class="source" href="{{ item.url }}" target="_blank" rel="nofollow noopener">{{ text.source }}</a>
+
+      <a class="source" href="{{ item.url }}" target="_blank" rel="nofollow noopener">{{ t.read_original }}</a>
     </article>
     {% endfor %}
   </div>

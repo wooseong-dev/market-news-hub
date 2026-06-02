@@ -1,34 +1,60 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="panel">
-  <h1>{{ text.all_news }}</h1>
-  <form class="filters" method="get" action="{{ localize('/news', lang) }}">
-    <input type="search" name="q" value="{{ q }}" placeholder="{{ text.search_placeholder }}">
+  <h1>{{ t.all_news }}</h1>
+
+  <form class="filters" method="get" action="{{ localized_path('/news', lang) }}">
+    <input type="search" name="q" value="{{ q }}" placeholder="{{ t.search_placeholder }}">
     <select name="category">
-      <option value="">{{ text.all_categories }}</option>
-      {% for category in categories %}<option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ cat_label(category, lang) }}</option>{% endfor %}
+      <option value="">{{ '전체 카테고리' if lang == 'ko' else 'All categories' }}</option>
+      {% for category in categories %}
+      <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category_label(category, lang) }}</option>
+      {% endfor %}
     </select>
     <select name="importance">
-      <option value="">{{ text.all_importance }}</option>
+      <option value="">{{ '전체 중요도' if lang == 'ko' else 'All importance' }}</option>
       <option value="High" {% if selected_importance == "High" %}selected{% endif %}>High</option>
       <option value="Medium" {% if selected_importance == "Medium" %}selected{% endif %}>Medium</option>
       <option value="Low" {% if selected_importance == "Low" %}selected{% endif %}>Low</option>
     </select>
-    <button type="submit">{{ text.filter }}</button>
+    <button type="submit">{{ t.filter }}</button>
   </form>
+</section>
 
-  <div class="news-list">
+<section class="panel">
+  <div class="news-list upgraded-news-list">
     {% for item in items %}
-    <article class="news-row">
-      <div>
-        <div class="meta"><span>{{ cat_label(item.category, lang) }}</span><span>{{ item.importance }}</span><span>{{ item.certainty }}</span><span>{{ item.assets }}</span></div>
-        <h2><a href="{{ localize('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h2>
-        <p>{{ interp_item(item, lang) }}</p>
-        <small>{{ item.source }} · {{ item.published_at }}</small>
+    <article class="news-row upgraded-row">
+      <a class="news-thumb small {{ item.category }}" href="{{ localized_path('/article/' ~ item.slug, lang) }}">
+        <span class="thumb-icon">{{ category_icon(item.category) }}</span>
+        <span class="thumb-label">{{ category_name(item.category, lang) }}</span>
+      </a>
+
+      <div class="news-main">
+        <div class="badge-row">
+          <span class="badge category">{{ category_label(item.category, lang) }}</span>
+          <span class="badge impact {{ item.importance|lower }}">{{ importance_label(item.importance, lang) }}</span>
+          <span class="badge certainty">{{ item.certainty }}</span>
+          {% for asset in split_tags(item.assets) %}
+          <span class="badge asset">{{ asset }}</span>
+          {% endfor %}
+        </div>
+
+        <h2><a href="{{ localized_path('/article/' ~ item.slug, lang) }}">{{ item.title }}</a></h2>
+        <p>{{ interpret_item(item, lang) }}</p>
+
+        <div class="source-line">
+          <span>{{ item.source }}</span>
+          <span>·</span>
+          <span>{{ item.published_at }}</span>
+        </div>
       </div>
-      <a class="source" href="{{ item.url }}" target="_blank" rel="nofollow noopener">{{ text.source }}</a>
+
+      <a class="source" href="{{ item.url }}" target="_blank" rel="nofollow noopener">{{ t.read_original }}</a>
     </article>
-    {% else %}<p>{{ text.no_news }}</p>{% endfor %}
+    {% else %}
+    <p>{{ t.no_news }}</p>
+    {% endfor %}
   </div>
 </section>
 {% endblock %}

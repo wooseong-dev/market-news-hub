@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-<article class="panel article">
-  <div class="meta"><span>{{ 'Guide' if lang == 'en' else '가이드' }}</span></div>
-  <h1>{{ guide.title }}</h1>
-  <p class="published">{{ guide.description }}</p>
-  {% for paragraph in guide.body %}<p>{{ paragraph }}</p>{% endfor %}
-</article>
-{% endblock %}
